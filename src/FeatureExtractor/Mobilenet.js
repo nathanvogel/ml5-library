@@ -11,6 +11,7 @@ import * as tf from '@tensorflow/tfjs';
 import * as mobilenet from '@tensorflow-models/mobilenet';
 
 import Video from './../utils/Video';
+import Canvas from './../utils/Canvas';
 
 import { imgToTensor } from '../utils/imageUtilities';
 import callCallback from '../utils/callcallback';
@@ -81,6 +82,11 @@ class Mobilenet {
       inputVideo = video;
     } else if (typeof video === 'object' && video.elt instanceof HTMLVideoElement) {
       inputVideo = video.elt; // p5.js video element
+    } else if (video instanceof HTMLCanvasElement) {
+      inputVideo = video;
+      const vid = new Canvas(inputVideo, IMAGE_SIZE);
+      this.video = await vid.loadVideo();
+      return this;
     }
 
     if (inputVideo) {

@@ -106,6 +106,14 @@ class ImageClassifier {
   }
 }
 
+// https://js.tensorflow.org/api/0.13.0/#fromPixels
+const isSupportedPixelType = e => (
+  e instanceof HTMLVideoElement ||
+  e instanceof HTMLCanvasElement ||
+  e instanceof HTMLImageElement ||
+  e instanceof ImageData
+);
+
 const imageClassifier = (modelName, videoOrOptionsOrCallback, optionsOrCallback, cb) => {
   let model;
   let video;
@@ -118,9 +126,11 @@ const imageClassifier = (modelName, videoOrOptionsOrCallback, optionsOrCallback,
     throw new Error('Please specify a model to use. E.g: "MobileNet"');
   }
 
-  if (videoOrOptionsOrCallback instanceof HTMLVideoElement) {
+  console.log('buidling classifier');
+
+  if (isSupportedPixelType(videoOrOptionsOrCallback)) {
     video = videoOrOptionsOrCallback;
-  } else if (typeof videoOrOptionsOrCallback === 'object' && videoOrOptionsOrCallback.elt instanceof HTMLVideoElement) {
+  } else if (typeof videoOrOptionsOrCallback === 'object' && isSupportedPixelType(videoOrOptionsOrCallback.elt)) {
     video = videoOrOptionsOrCallback.elt; // Handle a p5.js video element
   } else if (typeof videoOrOptionsOrCallback === 'object') {
     options = videoOrOptionsOrCallback;
